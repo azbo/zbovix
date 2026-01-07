@@ -1,0 +1,30 @@
+{
+  "websites": [
+    {
+      "name": "示例网站1",
+      "logPath": "./weblog_eg/blog.beyondxin.top.log",
+      "logType": "nginx"
+    },
+    {
+      "name": "JSON日志示例",
+      "logPath": "./json.log",
+      "logType": "json"
+    }
+  ],
+  "system": {
+    "logDestination": "file",
+    "taskInterval": "5m"
+  },
+  "server": {
+    "Port": ":8088"
+  },
+  "pvFilter": {
+    "statusCodeInclude": [200],
+    "excludePatterns": [
+      "favicon.ico$",
+      "robots.txt$",
+      "\.(?:js|css|jpg|jpeg|png|gif|svg|webp|woff|woff2|ttf|eot|ico)$"
+    ],
+    "excludeIPs": ["127.0.0.1", "::1"]
+  }
+}
