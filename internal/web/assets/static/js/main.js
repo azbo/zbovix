@@ -22,7 +22,7 @@ import {
 } from './ranking.js';
 
 import {
-    initWebsiteSelector,
+    initWebsiteTabs,
 } from './sites.js';
 
 import {
@@ -39,32 +39,32 @@ import {
 } from './theme.js';
 
 // 模块级变量
-let websiteSelector = null;
+let websiteTabs = null;
 let dateRange = null;
 let currentWebsiteId = '';
 
 // 初始化应用
 function initApp() {
     // 获取控件元素
-    websiteSelector = document.getElementById('website-selector');
+    websiteTabs = document.getElementById('website-tabs');
     dateRange = document.getElementById('date-range');
 
     initThemeManager(); // 初始化主题
     initChart(); // 初始化图表
     initGeoMap(); // 初始化地图
-    initSites(); // 初始化网站选择器并绑定回调
+    initSites(); // 初始化网站标签并绑定回调
     bindEventListeners();  // 绑定事件监听器
 }
 
-// 初始化网站选择器
+// 初始化网站标签
 async function initSites() {
     try {
-        currentWebsiteId = await initWebsiteSelector(websiteSelector, handleWebsiteSelected);
+        currentWebsiteId = await initWebsiteTabs(websiteTabs, handleWebsiteSelected);
         refreshData();
 
     } catch (error) {
         console.error('初始化网站失败:', error);
-        displayErrorMessage('无法初始化网站选择器，请刷新页面重试');
+        displayErrorMessage('无法初始化网站标签，请刷新页面重试');
     }
 }
 
@@ -115,7 +115,7 @@ async function refreshData() {
 
     } catch (error) {
         console.error('加载网站数据失败:', error);
-        displayErrorMessage(`无法获取"${websiteSelector.options[websiteSelector.selectedIndex].text}"的统计数据`, chartCanvas);
+        displayErrorMessage('无法获取统计数据');
     }
 }
 

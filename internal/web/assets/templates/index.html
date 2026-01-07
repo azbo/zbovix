@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .title }}</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/world.js"></script>
+    <script src="/static/js/echarts/chart.js"></script>
+    <script src="/static/js/echarts/echarts.min.js"></script>
+    <script src="/static/js/echarts/china.js"></script>
+    <script src="/static/js/echarts/world.js"></script>
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/tables.css">
     <link rel="stylesheet" href="/static/css/media.css">
@@ -17,15 +17,17 @@
 <body>
     <div class="container">
         <header class="header-container">
-            <h1>
-                <select id="website-selector" class="website-dropdown">
-                    <option value="">加载中...</option>
-                </select> 访问统计
-            </h1>
-            <button id="theme-toggle" class="theme-toggle" title="切换主题">
-                <span class="light-icon">🌙</span>
-                <span class="dark-icon">☀️</span>
-            </button>
+            <h1>访问统计</h1>
+            <div class="header-tabs" id="website-tabs">
+                <!-- 标签将由JavaScript动态生成 -->
+            </div>
+            <div class="header-actions">
+                <a href="/logs" class="header-link">查看完整日志</a>
+                <button id="theme-toggle" class="theme-toggle" title="切换主题">
+                    <span class="light-icon">🌙</span>
+                    <span class="dark-icon">☀️</span>
+                </button>
+            </div>
         </header>
 
         <!-- 网站整体统计和时间选择 -->
@@ -217,7 +219,6 @@
 
         <footer>
             <p>NixVis - Nginx 网站日志分析工具</p>
-            <a href="/logs" class="footer-link">查看完整日志</a>
         </footer>
 
         <script type="module" src="/static/js/main.js"></script>

@@ -1,0 +1,19 @@
+# Shell 脚本保持 LF 行尾符
+*.sh text eol=lf
+
+# JavaScript 和 CSS 文件保持 LF
+*.js text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+
+# Go 源码保持 LF
+*.go text eol=lf
+go.mod text eol=lf
+go.sum text eol=lf
+
+# Markdown 文件
+*.md text eol=lf
+
+# 其他文本文件
+LICENSE text eol=lf

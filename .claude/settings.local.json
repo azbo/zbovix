@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(where go)",
+      "Bash(docker:*)",
+      "Bash(winget install:*)",
+      "Bash(export PATH=$PATH:/c/Program Files/Go/bin:/c/Users/$USER/go/bin:*)",
+      "Bash(go version:*)",
+      "Bash(go mod tidy:*)",
+      "Bash(export:*)",
+      "Bash(go build:*)",
+      "Bash(./nixvis.exe -gen-config:*)",
+      "Bash(git update-index:*)",
+      "Bash(for:*)",
+      "Bash(do bash -n \"$script\")",
+      "Bash(echo:*)",
+      "Bash(done)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
