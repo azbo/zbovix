@@ -12,8 +12,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beyondxinxin/nixvis/internal/netparser"
-	"github.com/beyondxinxin/nixvis/internal/util"
+	"github.com/azbo/zbovix/internal/netparser"
+	"github.com/azbo/zbovix/internal/util"
 	"github.com/sirupsen/logrus"
 )
 
@@ -160,6 +160,13 @@ func (p *LogParser) ScanNginxLogs() []ParserResult {
 // scanSingleFile 扫描单个日志文件
 func (p *LogParser) scanSingleFile(
 	websiteID string, logPath string, parserResult *ParserResult) {
+	// 获取网站配置，确定日志类型
+	website, _ := util.GetWebsiteByID(websiteID)
+	logType := website.LogType
+	if logType == "" {
+		logType = "nginx" // 默认为 nginx 日志
+	}
+
 	// 打开文件
 	file, err := os.Open(logPath)
 	if err != nil {
@@ -186,15 +193,20 @@ func (p *LogParser) scanSingleFile(
 		return
 	}
 
-	// 读取并解析日志
-	entriesCount := p.parseLogLines(file, websiteID, parserResult)
+	// 根据日志类型选择解析器
+	var entriesCount int
+	if logType == "json" {
+		entriesCount = p.parseJSONLogLines(file, websiteID, parserResult)
+	} else {
+		entriesCount = p.parseLogLines(file, websiteID, parserResult)
+	}
 
 	// 更新文件状态
 	p.updateFileState(websiteID, logPath, currentSize)
 
 	if entriesCount > 0 {
-		logrus.Infof("网站 %s 的日志文件 %s 扫描完成，解析了 %d 条记录",
-			websiteID, logPath, entriesCount)
+		logrus.Infof("网站 %s (%s类型) 的日志文件 %s 扫描完成，解析了 %d 条记录",
+			websiteID, logType, logPath, entriesCount)
 	}
 }
 
@@ -362,4 +374,143 @@ func EmptyParserResult(name, id string) ParserResult {
 		Success:      true,
 		Error:        nil,
 	}
+}
+
+// JSONLogEntry JSON日志结构
+type JSONLogEntry struct {
+	Timestamp       string `json:"@timestamp"`
+	App             string `json:"app"`
+	Env             string `json:"env"`
+	Level           string `json:"level"`
+	Logger          string `json:"logger"`
+	Message         string `json:"message"`
+	RequestMethod   string `json:"aspnet-request-method"`
+	RequestURL      string `json:"aspnet-request-url"`
+	RequestIP       string `json:"aspnet-request-ip"`
+	RequestHeaders  string `json:"aspnet-request-headers"`
+}
+
+// parseJSONLogLines 解析JSON格式日志行
+func (p *LogParser) parseJSONLogLines(
+	file *os.File, websiteID string, parserResult *ParserResult) int {
+	scanner := bufio.NewScanner(file)
+	entriesCount := 0
+
+	const batchSize = 100
+	batch := make([]NginxLogRecord, 0, batchSize)
+
+	processBatch := func() {
+		if len(batch) == 0 {
+			return
+		}
+		if err := p.repo.BatchInsertLogsForWebsite(websiteID, batch); err != nil {
+			logrus.Errorf("批量插入网站 %s 的JSON日志记录失败: %v", websiteID, err)
+		}
+		batch = batch[:0]
+	}
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		entry, err := p.parseJSONLogLine(line)
+		if err != nil {
+			continue
+		}
+		batch = append(batch, *entry)
+		entriesCount++
+		parserResult.TotalEntries++
+
+		if len(batch) >= batchSize {
+			processBatch()
+		}
+	}
+
+	processBatch()
+
+	if err := scanner.Err(); err != nil {
+		logrus.Errorf("扫描网站 %s 的JSON文件时出错: %v", websiteID, err)
+	}
+
+	return entriesCount
+}
+
+// parseJSONLogLine 解析单行JSON日志
+func (p *LogParser) parseJSONLogLine(line string) (*NginxLogRecord, error) {
+	var jsonLog JSONLogEntry
+	if err := json.Unmarshal([]byte(line), &jsonLog); err != nil {
+		return nil, err
+	}
+
+	// 解析时间戳
+	timestamp, err := time.Parse("2006/01/02 15:04:05.000", jsonLog.Timestamp)
+	if err != nil {
+		return nil, err
+	}
+
+	// 检查日志是否超过30天
+	cutoffTime := time.Now().AddDate(0, 0, -31)
+	if timestamp.Before(cutoffTime) {
+		return nil, errors.New("日志超过30天")
+	}
+
+	// 解析URL
+	parsedURL, err := url.Parse(jsonLog.RequestURL)
+	if err != nil {
+		return nil, err
+	}
+
+	// 提取IP（从请求头或请求IP字段）
+	ip := jsonLog.RequestIP
+	if ip == "" || ip == "::1" {
+		// 尝试从请求头中提取 X-Real-IP 或 X-Forwarded-For
+		headers := jsonLog.RequestHeaders
+		if strings.Contains(headers, "X-Real-IP=") {
+			parts := strings.Split(headers, "X-Real-IP=")
+			if len(parts) > 1 {
+				ip = strings.Split(parts[1], ",")[0]
+			}
+		} else if strings.Contains(headers, "X-Forwarded-For=") {
+			parts := strings.Split(headers, "X-Forwarded-For=")
+			if len(parts) > 1 {
+				ip = strings.Split(parts[1], ",")[0]
+			}
+		}
+	}
+
+	// 默认状态码为200（JSON日志可能不包含状态码）
+	statusCode := 200
+
+	// 解析User-Agent（从请求头中提取）
+	userAgent := ""
+	if strings.Contains(jsonLog.RequestHeaders, "User-Agent=") {
+		parts := strings.Split(jsonLog.RequestHeaders, "User-Agent=")
+		if len(parts) > 1 {
+			userAgent = strings.Split(parts[1], ",")[0]
+		}
+	}
+
+	// 判断是否计入PV
+	pageviewFlag := netparser.ShouldCountAsPageView(statusCode, parsedURL.Path, ip)
+
+	// 获取地理位置
+	domesticLocation, globalLocation, _ := netparser.GetIPLocation(ip)
+
+	// 解析浏览器和操作系统
+	browser, os, device := netparser.ParseUserAgent(userAgent)
+
+	return &NginxLogRecord{
+		ID:               0,
+		IP:               ip,
+		PageviewFlag:     pageviewFlag,
+		Timestamp:        timestamp,
+		Method:           jsonLog.RequestMethod,
+		Url:              parsedURL.Path,
+		Status:           statusCode,
+		BytesSent:        0,
+		Referer:          parsedURL.RawQuery,
+		UserBrowser:      browser,
+		UserOs:           os,
+		UserDevice:       device,
+		DomesticLocation: domesticLocation,
+		GlobalLocation:   globalLocation,
+	}, nil
 }

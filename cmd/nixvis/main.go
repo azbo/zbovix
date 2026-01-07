@@ -9,11 +9,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/beyondxinxin/nixvis/internal/netparser"
-	"github.com/beyondxinxin/nixvis/internal/stats"
-	"github.com/beyondxinxin/nixvis/internal/storage"
-	"github.com/beyondxinxin/nixvis/internal/util"
-	"github.com/beyondxinxin/nixvis/internal/web"
+	"github.com/azbo/zbovix/internal/netparser"
+	"github.com/azbo/zbovix/internal/stats"
+	"github.com/azbo/zbovix/internal/storage"
+	"github.com/azbo/zbovix/internal/util"
+	"github.com/azbo/zbovix/internal/web"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 

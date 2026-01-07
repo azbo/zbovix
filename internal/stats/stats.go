@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/beyondxinxin/nixvis/internal/storage"
-	"github.com/beyondxinxin/nixvis/internal/util"
+	"github.com/azbo/zbovix/internal/storage"
+	"github.com/azbo/zbovix/internal/util"
 )
 
 // StatsResult 统计结果的基础接口

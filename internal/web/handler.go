@@ -5,8 +5,8 @@ import (
 	"io/fs"
 	"net/http"
 
-	"github.com/beyondxinxin/nixvis/internal/stats"
-	"github.com/beyondxinxin/nixvis/internal/util"
+	"github.com/azbo/zbovix/internal/stats"
+	"github.com/azbo/zbovix/internal/util"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )

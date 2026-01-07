@@ -3,7 +3,7 @@ package netparser
 import (
 	"regexp"
 
-	"github.com/beyondxinxin/nixvis/internal/util"
+	"github.com/azbo/zbovix/internal/util"
 )
 
 var (

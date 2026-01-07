@@ -1,4 +1,4 @@
-module github.com/beyondxinxin/nixvis
+module github.com/azbo/zbovix
 
 go 1.23.6
 

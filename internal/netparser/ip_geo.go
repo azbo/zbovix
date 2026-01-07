@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/beyondxinxin/nixvis/internal/util"
+	"github.com/azbo/zbovix/internal/util"
 	"github.com/lionsoul2014/ip2region/binding/golang/xdb"
 	"github.com/sirupsen/logrus"
 )

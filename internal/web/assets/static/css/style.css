@@ -1,42 +1,49 @@
 /* 基本样式 */
 :root {
-    --bg-color: #f5f5f5;
-    --box-bg: white;
-    --text-color: #333;
-    --header-color: #2c3e50;
-    --border-color: #eee;
-    --shadow-color: rgba(0, 0, 0, 0.1);
-    --highlight-bg: #f8f9fa;
-    --bar-fill: #CCE3ED;
-    --bar-text: #696969cc;
-    --active-btn: #007bff;
+    --bg-color: #f8f9fa;
+    --box-bg: #ffffff;
+    --text-color: #2c3e50;
+    --header-color: #1a1a2e;
+    --border-color: #e9ecef;
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --highlight-bg: #f1f3f5;
+    --bar-fill: #4e54c8;
+    --bar-text: #ffffff;
+    --active-btn: #4e54c8;
     --active-text: white;
     --footer-color: #6c757d;
+    --accent-color: #4e54c8;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --info-color: #3b82f6;
 }
 
 body.dark-mode {
-    --bg-color: #1a1a1a;
-    --box-bg: #2d2d2d;
-    --text-color: #e0e0e0;
+    --bg-color: #0f0f1e;
+    --box-bg: #1a1a2e;
+    --text-color: #e4e4e7;
     --header-color: #ffffff;
-    --border-color: #444;
-    --shadow-color: rgba(0, 0, 0, 0.3);
-    --highlight-bg: #3d3d3d;
-    --bar-fill: #516a75;
-    --bar-text: #e0e0e0;
-    --active-btn: #5a9cff;
+    --border-color: #2d2d3d;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --highlight-bg: #252538;
+    --bar-fill: #6366f1;
+    --bar-text: #e4e4e7;
+    --active-btn: #6366f1;
     --active-text: white;
-    --footer-color: #aaaaaa;
+    --footer-color: #a1a1aa;
+    --accent-color: #6366f1;
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     line-height: 1.6;
     color: var(--text-color);
-    background-color: var(--bg-color);
+    background: linear-gradient(135deg, var(--bg-color) 0%, var(--highlight-bg) 100%);
     margin: 0;
     padding: 0;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    min-height: 100vh;
 }
 
 /* 布局容器 */
@@ -48,12 +55,18 @@ body {
 
 .box-container {
     background-color: var(--box-bg);
-    border-radius: 8px;
-    box-shadow: 0 2px 10px var(--shadow-color);
-    padding: 20px;
-    margin: 20px 0;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px var(--shadow-color);
+    padding: 24px;
+    margin: 16px 0;
     overflow: hidden;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--border-color);
+}
+
+.box-container:hover {
+    box-shadow: 0 8px 30px var(--shadow-color);
+    transform: translateY(-2px);
 }
 
 .controls-box {
@@ -93,9 +106,12 @@ body {
 }
 
 .stat-value {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
-    color: var(--header-color);
+    background: linear-gradient(135deg, var(--accent-color), var(--info-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-left: 8px;
     display: inline-block;
     min-width: 60px;
@@ -117,13 +133,14 @@ body {
 
 /* 切换按钮样式 */
 .data-view-toggle-btn {
-    padding: 8px 16px;
-    border: 1px solid var(--border-color);
+    padding: 10px 20px;
+    border: 2px solid var(--border-color);
     background-color: var(--box-bg);
     color: var(--text-color);
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 14px;
+    font-weight: 500;
 }
 
 .data-view-toggle-btn:first-child {
@@ -135,9 +152,11 @@ body {
 }
 
 .data-view-toggle-btn.active {
-    background-color: var(--active-btn);
+    background: linear-gradient(135deg, var(--accent-color), var(--info-color));
     color: var(--active-text);
-    border-color: var(--active-btn);
+    border-color: var(--accent-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transform: scale(1.05);
 }
 
 .data-view-toggle-btn.disabled {
@@ -251,21 +270,26 @@ select:focus {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 0;
+    padding: 24px 0;
     position: sticky;
     top: 0;
     z-index: 100;
-    background-color: var(--bg-color);
-    min-height: 80px;
+    background: linear-gradient(135deg, var(--box-bg) 0%, var(--highlight-bg) 100%);
+    backdrop-filter: blur(10px);
     text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .header-container > h1 {
-    margin: 10px 0;
+    margin: 8px 0;
     color: var(--header-color);
-    font-size: 1.5rem;
-    font-weight: bold;
+    font-size: 2rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent-color), var(--info-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Header tabs container */
@@ -281,26 +305,30 @@ select:focus {
 /* Tab button style */
 .tab-button {
     background-color: var(--box-bg);
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
     color: var(--text-color);
-    padding: 8px 20px;
-    border-radius: 6px;
+    padding: 10px 24px;
+    border-radius: 12px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 0.95rem;
+    font-weight: 500;
     white-space: nowrap;
 }
 
 .tab-button:hover {
     background-color: var(--highlight-bg);
     border-color: var(--accent-color);
-    color: var(--text-color);
+    color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
 }
 
 .tab-button.active {
-    background-color: var(--accent-color);
+    background: linear-gradient(135deg, var(--accent-color), var(--info-color));
     color: #fff !important;
     border-color: var(--accent-color);
+    box-shadow: 0 6px 16px var(--shadow-color);
 }
 
 /* Header actions container */

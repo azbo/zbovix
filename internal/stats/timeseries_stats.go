@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beyondxinxin/nixvis/internal/storage"
-	"github.com/beyondxinxin/nixvis/internal/util"
+	"github.com/azbo/zbovix/internal/storage"
+	"github.com/azbo/zbovix/internal/util"
 )
 
 type StatPoint struct {

@@ -14,13 +14,12 @@
 <body>
     <div class="container">
         <header class="header-container">
-            <h1>
+            <h1>ZboVix 日志查询与分析</h1>
+            <div class="header-controls">
                 <select id="website-selector" class="website-dropdown">
                     <option value="">加载中...</option>
-                </select> 访问日志
-            </h1>
-            <div class="header-controls">
-                <a href="/" class="nav-link">返回首页</a>
+                </select>
+                <a href="/" class="nav-link">返回统计</a>
                 <button id="theme-toggle" class="theme-toggle" title="切换主题">
                     <span class="light-icon">🌙</span>
                     <span class="dark-icon">☀️</span>
@@ -31,34 +30,49 @@
         <!-- 日志查询控制区 -->
         <div class="box-container logs-control-box">
             <div class="logs-control-content">
-                <div class="search-box">
-                    <input type="text" id="logs-search" placeholder="搜索日志..." class="search-input">
-                    <button id="search-btn" class="search-btn">搜索</button>
+                <div class="filter-section">
+                    <div class="search-box">
+                        <input type="text" id="logs-search" placeholder="搜索 URL、IP 地址..." class="search-input">
+                        <button id="search-btn" class="search-btn">
+                            <span>🔍</span> 搜索
+                        </button>
+                    </div>
                 </div>
                 <div class="sort-controls">
-                    <div class="sort-field-container">
-                        <label for="sort-field">排序字段:</label>
+                    <div class="control-group">
+                        <label for="sort-field">排序:</label>
                         <select id="sort-field" class="sort-select">
                             <option value="timestamp">时间</option>
-                            <option value="ip">IP</option>
+                            <option value="ip">IP地址</option>
                             <option value="url">URL</option>
-                            <option value="status_code">状态码</option>
+                            <option value="status">状态码</option>
                             <option value="bytes_sent">流量</option>
                         </select>
                     </div>
-                    <div class="sort-order-container">
+                    <div class="control-group">
                         <label for="sort-order">顺序:</label>
                         <select id="sort-order" class="sort-select">
                             <option value="desc">降序</option>
                             <option value="asc">升序</option>
                         </select>
                     </div>
-                    <div class="page-size-container">
-                        <label for="page-size">每页行数:</label>
+                    <div class="control-group">
+                        <label for="page-size">每页:</label>
                         <select id="page-size" class="sort-select">
                             <option value="50">50</option>
                             <option value="100" selected>100</option>
                             <option value="200">200</option>
+                            <option value="500">500</option>
+                        </select>
+                    </div>
+                    <div class="control-group">
+                        <label for="status-filter">状态:</label>
+                        <select id="status-filter" class="sort-select">
+                            <option value="">全部</option>
+                            <option value="200">200</option>
+                            <option value="301">301</option>
+                            <option value="302">302</option>
+                            <option value="404">404</option>
                             <option value="500">500</option>
                         </select>
                     </div>
@@ -112,7 +126,7 @@
         </div>
 
         <footer>
-            <p>NixVis - Nginx 网站日志分析工具</p>
+            <p>ZboVix - 多格式日志分析工具</p>
         </footer>
     </div>
 

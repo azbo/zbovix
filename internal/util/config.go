@@ -26,6 +26,7 @@ type Config struct {
 type WebsiteConfig struct {
 	Name    string `json:"name"`
 	LogPath string `json:"logPath"`
+	LogType string `json:"logType"` // "nginx" 或 "json"
 }
 
 type SystemConfig struct {
@@ -80,6 +81,10 @@ func ReadConfig() *Config {
 
 	// 初始化 ID 映射
 	for _, website := range cfg.Websites {
+		// 默认日志类型为 nginx
+		if website.LogType == "" {
+			website.LogType = "nginx"
+		}
 		id := generateID(website.Name)
 		websiteIDMap.Store(id, website)
 	}

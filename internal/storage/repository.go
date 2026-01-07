@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/beyondxinxin/nixvis/internal/util"
+	"github.com/azbo/zbovix/internal/util"
 	"github.com/sirupsen/logrus"
 	_ "modernc.org/sqlite"
 )

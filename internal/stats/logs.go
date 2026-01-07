@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beyondxinxin/nixvis/internal/storage"
+	"github.com/azbo/zbovix/internal/storage"
 )
 
 // LogEntry 表示单条日志信息
